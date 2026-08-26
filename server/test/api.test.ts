@@ -60,7 +60,7 @@ async function runTests() {
   const productsRes = await request(app).get('/api/products?limit=10');
   assert.strictEqual(productsRes.status, 200);
   assert.ok(productsRes.body.data.length > 0);
-  const firstProduct = productsRes.body.data[0];
+  const inStockProduct = productsRes.body.data.find((p: any) => p.stock >= 2) || productsRes.body.data[0];
   console.log(`✅ 5. Products Catalog: PASSED (${productsRes.body.data.length} products loaded)`);
 
   // 6. Search Suggestions
@@ -97,7 +97,7 @@ async function runTests() {
     .post('/api/cart/items')
     .set('Authorization', `Bearer ${customerToken}`)
     .send({
-      productId: firstProduct.id,
+      productId: inStockProduct.id,
       quantity: 2,
     });
   assert.strictEqual(addToCartRes.status, 200);
@@ -107,7 +107,7 @@ async function runTests() {
 
   // 10. Wishlist Toggle
   const wishlistRes = await request(app)
-    .post(`/api/wishlist/${firstProduct.id}`)
+    .post(`/api/wishlist/${inStockProduct.id}`)
     .set('Authorization', `Bearer ${customerToken}`);
   assert.strictEqual(wishlistRes.status, 200);
   assert.strictEqual(wishlistRes.body.data.inWishlist, true);

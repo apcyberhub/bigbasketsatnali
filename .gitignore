@@ -33,6 +33,12 @@ build/
 Thumbs.db
 desktop.ini
 
+# Database
+*.db
+*.db-journal
+*.sqlite
+prisma/dev.db
+
 # Logs & Temporary files
 logs/
 *.log

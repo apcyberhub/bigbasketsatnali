@@ -1,147 +1,204 @@
-# BIG BASKET — Online Grocery Supermarket & Delivery Platform
+# 🧺 BIG BASKET — Full-Stack Grocery E-Commerce Platform
 
-> **Step 1: Frontend Foundation + Homepage**
+> **Production-Ready Master Web Application & Client Handover Documentation**
 
-Big Basket is a modern, high-performance online grocery and daily essentials e-commerce platform. It provides quick-commerce functionality inspired by leading grocery marketplaces with fresh branding, layout, CSS design system, and modular JavaScript.
-
----
-
-## 🚀 Tech Stack
-
-- **HTML5**: Semantic, accessible markup.
-- **CSS3**: Vanilla CSS with comprehensive CSS custom properties (Design Tokens), flexbox, grid, and fluid responsive design. No Tailwind, no Bootstrap.
-- **Vanilla JavaScript**: Clean, modular ES6+ architecture with an API abstraction layer (`/js/api.js`) ready to connect to a Python FastAPI backend.
-- **Zero Heavy Frameworks**: Ultra-lightweight, zero bundle overhead, sub-second load times.
+**BIG BASKET** (*Fresh Groceries & Daily Essentials*) is a high-performance, full-stack grocery e-commerce platform built with modern web architecture: **React 18 + TypeScript + Vite + Tailwind CSS** on the frontend, and **Node.js + Express + TypeScript + Prisma ORM** on the backend.
 
 ---
 
-## 📁 Project Structure
+## 🌟 Key Highlights & Architecture
+
+- **⚡ Fast & Modern**: Sub-second catalog browsing, debounced live search autocomplete, category filters, and instant cart updates.
+- **🛡️ Secure & Robust**: JWT authentication, bcrypt password hashing, input validation via Zod schemas, rate-limiting, CORS, and Helmet security headers.
+- **📱 Smart Unified Login**: Single login portal for both Customers and Store Administrators with 6-digit OTP verification and automatic role-based redirection.
+- **🛒 Complete Grocery Flow**: 13 master grocery categories, coupon discount engine (`WELCOME20`, `FREEDEL`, `BIGBASKET50`, `FLAT100`), delivery slot scheduler (Today / Tomorrow), free delivery progress bar, and atomic database transaction order placement.
+- **💳 Native Payments**: Cash on Delivery (COD) works 100% out of the box with zero external configuration + ready-to-plug Razorpay online payment integration with HMAC-SHA256 signature verification.
+- **📊 Real-Time Admin Dashboard**: Executive sales analytics, 7-day revenue bar chart, live inventory stock adjustments, order dispatch pipeline, review moderation, banner carousel management, and store settings.
+
+---
+
+## 📁 Repository Structure
 
 ```text
 bigbasket/
+├── client/                     # Frontend Application (React 18 + TypeScript + Vite)
+│   ├── public/                 # Static assets (logo, product illustrations, banners)
+│   ├── src/
+│   │   ├── api/                # Axios API client instance with interceptors
+│   │   ├── components/         # Reusable UI components (Navbar, Footer, ProductCard, etc.)
+│   │   ├── context/            # Global state (AuthContext, CartContext, WishlistContext)
+│   │   ├── pages/
+│   │   │   ├── customer/       # Storefront pages (Home, Shop, ProductDetail, Cart, Checkout, etc.)
+│   │   │   └── admin/          # Admin Portal pages (Dashboard, Products, Inventory, Orders, etc.)
+│   │   ├── types/              # Full TypeScript interface definitions
+│   │   ├── App.tsx             # Main client router & protected guards
+│   │   ├── index.css           # Custom design tokens & styling utilities
+│   │   └── main.tsx            # React application entrypoint
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── vite.config.ts
 │
-├── index.html               # Main Homepage (21 completed sections)
-├── shop.html                # Shop & Category Catalog Page (Placeholder)
-├── product.html             # Product Details Page (Placeholder)
-├── cart.html                # Full Cart Page (Placeholder)
-├── checkout.html            # Checkout Flow Page (Placeholder)
-├── login.html               # Customer Login Page (Placeholder)
-├── register.html            # Registration Page (Placeholder)
+├── server/                     # Backend API Service (Node.js + Express + TypeScript)
+│   ├── src/
+│   │   ├── config/             # Environment & Prisma client instances
+│   │   ├── controllers/        # Express route controllers (Auth, Products, Cart, Orders, Admin, etc.)
+│   │   ├── middleware/         # Auth guards, role verification, file upload, error handling
+│   │   ├── routes/             # RESTful API route definitions (/api/*)
+│   │   ├── utils/              # JWT, response helpers, OTP generator
+│   │   ├── app.ts              # Express application configuration
+│   │   └── server.ts           # Server entrypoint (Port 5000)
+│   ├── test/                   # Automated integration test suite
+│   ├── package.json
+│   └── tsconfig.json
 │
-├── css/
-│   ├── variables.css        # Design system tokens (colors, spacing, typography, shadows)
-│   ├── reset.css            # Modern clean CSS reset
-│   ├── global.css           # Utility classes, buttons, badges, modals, toast system
-│   ├── header.css           # Topbar, sticky header, search dropdown, category pills
-│   ├── hero.css             # Hero promotional banner with animated visual stack
-│   ├── categories.css       # 14 categories grid with themed badges and hover effects
-│   ├── products.css         # Reusable product cards with quantity stepper & MRP discount
-│   ├── sections.css         # Best Deals, Why Choose Us, Local Delivery, Newsletter
-│   ├── footer.css           # 4-column footer, social icons, app store teasers, payment pills
-│   └── responsive.css       # Mobile-first responsive breakpoints (320px to 1920px+)
+├── prisma/                     # Database Schema & Migrations
+│   ├── schema.prisma           # Prisma models (User, Product, Category, Order, Cart, etc.)
+│   └── seed.ts                 # Database seeder with 25+ products & sample users
 │
-├── js/
-│   ├── api.js               # API abstraction layer with realistic Indian grocery mock data
-│   ├── app.js               # Main bootstrap & orchestrator
-│   ├── header.js            # Sticky scroll effect and mobile drawer menu toggle
-│   ├── search.js            # Live autocomplete suggestions, history & popular tags
-│   ├── location.js          # Deliver-to modal, pincode validation, area selector
-│   ├── products.js          # Product rendering & horizontal carousel scroll controls
-│   ├── cart.js              # Reactive cart state (localStorage), badge counter, slide-over drawer
-│   └── ui.js                # Toast notification system and UI micro-interactions
-│
-├── assets/
-│   ├── icons/               # SVG icon sprites
-│   ├── logo/                # Big Basket brand logo
-│   └── images/              # Media directory
-│
-└── README.md                # Project documentation & execution guide
+├── assets/                     # Master brand media assets (Official logo, banners, icons)
+├── uploads/                    # User & Admin media upload directory
+├── .env.example                # Template environment variables
+├── package.json                # Root orchestration scripts
+└── README.md                   # Project documentation
 ```
 
 ---
 
-## ✨ Features Implemented in Step 1
+## 🚀 Quick Start Guide (Local Setup)
 
-1. **Top Announcement Bar**: Informative delivery speed, freshness, and payment highlights.
-2. **Desktop & Mobile Header**:
-   - Left: Big Basket logo.
-   - Center: Intelligent search bar with clear button, live search suggestions, recent searches (with clear option), and popular search tags.
-   - Right: Deliver-To location picker, customer account link, and interactive Cart button with badge counter and real-time subtotal.
-   - Mobile: 3-row layout (Row 1: Menu + Logo + Cart; Row 2: Search; Row 3: Deliver to address strip).
-3. **Location Selector Modal**:
-   - Select popular local areas (Indiranagar, Koramangala, Bandra, Connaught Place, Hitec City, etc.).
-   - 6-digit Indian pincode input with validation.
-   - "Use Current Location" simulated trigger.
-   - Persists selected delivery address across the site.
-4. **Search Experience**:
-   - Debounced search queries.
-   - Live dropdown matching product name, brand, or category.
-   - Recent search history saved to `localStorage`.
-   - Keyboard accessible (Enter, Escape).
-5. **Hero Banner**:
-   - High-impact visual with *"Everything You Need, Delivered Fast."*
-   - Pulse animation on express delivery badge.
-   - Showcase basket card and promotional coupon code `BBFIRST`.
-6. **Shop by Category (14 Categories)**:
-   - Fruits & Veg, Atta/Rice/Dal, Dairy, Snacks, Chocolates, Beverages, Personal Care, Household, Baby Care, Toys & Kids, Beauty, Home & Kitchen, Electronics, Pet Care.
-   - Individual color themes, hover lifts, and direct links to category catalog (`shop.html?category=...`).
-7. **Reusable Product Card System**:
-   - Product image/artwork with category badge.
-   - Brand name, product title, unit/weight.
-   - Star rating pill (e.g., `★ 4.8`).
-   - Selling price vs MRP with discount percentage.
-   - Interactive **ADD** button that transforms into a `[ - QTY + ]` quantity stepper.
-8. **Horizontal Product Carousels**:
-   - Best Sellers, Fresh Grocery Picks, Snacks & Chocolates, Toys & Kids, Household Essentials.
-   - Smooth left/right navigation arrow buttons on desktop with auto-disable at boundaries.
-   - Native touch swipe scroll on mobile devices.
-9. **Promotional Deals & Offers**:
-   - 4 vibrant promo cards (Mega Fresh Sale, Value Saver, Chocolates Fest, Kids Carnival).
-10. **Why Choose Us**:
-    - 4 value props (Fast Local Delivery, Fresh Products, Secure Payments, Friendly Support).
-11. **Local Delivery Explainer**:
-    - Hyperlocal supermarket online showcase with verified delivery hubs.
-12. **Newsletter & VIP Discounts**:
-    - Email subscription form with dynamic toast notification feedback.
-13. **Professional Multi-Column Footer**:
-    - About, Shop, Help, Legal columns, social media links, app store download teasers, and accepted payment method badges (UPI, Cards, COD).
-14. **Slide-Over Cart Drawer**:
-    - Accessible from any page via the header cart button.
-    - Free delivery progress meter (`Add ₹... more for FREE delivery`).
-    - Increment/decrement item quantity or remove item.
-    - Real-time item total, discount savings, delivery fee, and checkout CTA.
+### Prerequisites
+
+- **Node.js**: `v18.0.0` or higher
+- **NPM**: `v9.0.0` or higher
 
 ---
 
-## 💻 How to Run Locally
+### 1. Clone & Install Dependencies
 
-You can run this frontend with any static HTTP server. Examples:
-
-### Option 1: Python Built-in Server (Recommended)
+Run the unified installer from the project root:
 
 ```bash
-# In the project directory:
-python -m http.server 8000
+npm run install:all
 ```
 
-Then open `http://localhost:8000` in your web browser.
-
-### Option 2: Node / NPX Serve
-
-```bash
-npx -y serve .
-```
-
-### Option 3: VS Code Live Server Extension
-
-Right-click `index.html` and select **"Open with Live Server"**.
+*(This installs root, server, and client dependencies in one command).*
 
 ---
 
-## 🔮 Next Step (Step 2 Roadmap)
+### 2. Environment Configuration
 
-- **FastAPI Backend**: Connect `/js/api.js` endpoints to a Python FastAPI service (`/api/v1/products`, `/api/v1/categories`, `/api/v1/search`, `/api/v1/orders`).
-- **Database**: PostgreSQL / SQLite schema for products, inventory, users, addresses, and orders.
-- **Authentication**: JWT token authentication with OTP verification.
-- **Payment Gateway**: Integration of Razorpay / UPI QR code generation.
-- **Order Management & Tracking**: Real-time delivery tracking for local orders.
+Create a `.env` file in the project root (or copy from `.env.example`):
+
+```bash
+cp .env.example .env
+```
+
+Default development settings in `.env`:
+
+```env
+NODE_ENV=development
+PORT=5000
+CLIENT_URL=http://localhost:5173
+DATABASE_URL="file:./dev.db"
+JWT_SECRET=super_secret_jwt_key_bigbasket_grocery_2026_dev_mode
+ADMIN_EMAIL=admin@bigbasket.local
+ADMIN_PASSWORD=admin123
+```
+
+---
+
+### 3. Initialize Database & Seed Data
+
+Initialize SQLite database and seed products, categories, coupons, delivery slots, and demo accounts:
+
+```bash
+npm run db:setup
+```
+
+*Or run individually:*
+
+```bash
+npm run db:migrate
+```
+
+```bash
+npm run db:seed
+```
+
+---
+
+### 4. Start Development Servers
+
+Start both Backend API (`:5000`) and Frontend Client (`:5173`) concurrently:
+
+```bash
+npm run dev
+```
+
+- **🛍️ Storefront Application**: [http://localhost:5173](http://localhost:5173)
+- **⚡ Backend REST API**: [http://localhost:5000/api](http://localhost:5000/api)
+- **🩺 API Health Check**: [http://localhost:5000/api/health](http://localhost:5000/api/health)
+
+---
+
+## 🔑 Default Test Accounts
+
+| Account | Mobile / Email | Verification OTP | Password | Default Portal |
+| :--- | :--- | :--- | :--- | :--- |
+| **Store Customer** | `9876500001` or `customer@bigbasket.local` | `123456` | `customer123` | **Customer Storefront** (`/`) |
+| **Store Administrator** | `9876543210` or `admin@bigbasket.local` | `123456` | `admin123` | **Admin Dashboard** (`/admin`) |
+
+---
+
+## 🧪 Testing & Verification
+
+Run the comprehensive 20-point backend automated integration test suite:
+
+```bash
+npm test
+```
+
+*Validates: Health check, Registration, Login, Admin RBAC, Product catalog, Search suggestions, Cart operations, Wishlist, Coupon validation, Delivery slots, Atomic checkout, Order cancellation with stock restore, and Security guards.*
+
+---
+
+## 🏗️ Production Build & Deployment
+
+To generate optimized production bundles:
+
+```bash
+npm run build
+```
+
+This compiles:
+
+- `server/dist`: Compiled Node.js CommonJS JavaScript.
+- `client/dist`: Minified, tree-shaken static assets with gzip compression.
+
+To run the production backend service:
+
+```bash
+npm start
+```
+
+---
+
+## 💳 Payment Gateway Configuration (Optional)
+
+Cash on Delivery (COD) is natively enabled. To enable online payments via Razorpay:
+
+1. Obtain test API keys from [Razorpay Dashboard](https://dashboard.razorpay.com/).
+2. Add your keys to `.env`:
+
+   ```env
+   RAZORPAY_KEY_ID=rzp_test_YourKeyIdHere
+   RAZORPAY_KEY_SECRET=YourKeySecretHere
+   ```
+
+3. Restart server. The system automatically enables Razorpay online checkout modal with HMAC signature verification.
+
+---
+
+## 📄 License & Attribution
+
+All custom brand logos and store designs are proprietary to **BIG BASKET**. All rights reserved.
