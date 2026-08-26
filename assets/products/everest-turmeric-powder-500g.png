@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <radialGradient id="grad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#fefce8"/>
+    </radialGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+  <rect width="500" height="500" rx="32" fill="url(#grad)" stroke="#f1f5f9" stroke-width="4"/>
+  <circle cx="250" cy="210" r="140" fill="#eab308" fill-opacity="0.10" />
+  <circle cx="250" cy="210" r="115" fill="#ffffff" filter="url(#shadow)"/>
+  <text x="250" y="245" font-size="96" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">✨</text>
+  <rect x="50" y="370" width="400" height="90" rx="20" fill="#ffffff" filter="url(#shadow)"/>
+  <text x="250" y="405" font-size="20" font-weight="bold" fill="#eab308" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1">EVEREST HALDI</text>
+  <text x="250" y="435" font-size="16" font-weight="600" fill="#334155" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">Pure Turmeric Powder</text>
+</svg>

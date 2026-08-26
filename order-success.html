@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Placed Successfully! — Big Basket Satnali</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <style>
+    .success-container {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .success-card {
+      background-color: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 580px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    }
+
+    .success-icon-wrap {
+      width: 76px;
+      height: 76px;
+      background-color: #dcfce7;
+      color: #16a34a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      margin: 0 auto 20px;
+      animation: popIn 0.5s ease;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .success-title {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--color-text-main);
+      margin-bottom: 8px;
+    }
+
+    .success-subtitle {
+      color: #64748b;
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+
+    .order-info-box {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 0.92rem;
+      border-bottom: 1px dashed #e2e8f0;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: #64748b;
+    }
+
+    .info-value {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .actions-group {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+    }
+
+    @media (max-width: 480px) {
+      .actions-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-main" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+        <a href="index.html" class="brand-logo" aria-label="Big Basket Satnali Home">
+          <img src="assets/logo.png" alt="Big Basket Satnali" style="height: 44px;">
+        </a>
+        <a href="orders.html" class="btn btn-secondary btn-sm"><i class="fas fa-boxes"></i> My Orders</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Success Content -->
+  <main class="container success-container">
+    <div class="success-card">
+      <div class="success-icon-wrap">
+        <i class="fas fa-check"></i>
+      </div>
+
+      <h1 class="success-title">Order Placed Successfully!</h1>
+      <p class="success-subtitle">Thank you for ordering with Big Basket Satnali. Your order is confirmed and being prepared.</p>
+
+      <div class="order-info-box">
+        <div class="info-row">
+          <span class="info-label">Order Number:</span>
+          <span class="info-value" id="dispOrderNumber" style="color: var(--color-primary);">BB202608210001</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Estimated Delivery:</span>
+          <span class="info-value" id="dispOrderEta">⚡ 15–30 minutes</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Payment Method:</span>
+          <span class="info-value" id="dispPaymentMethod">Online (Razorpay)</span>
+        </div>
+        <div class="info-row" id="rowPaymentId" style="display: none;">
+          <span class="info-label">Payment ID:</span>
+          <span class="info-value" id="dispPaymentId" style="font-family: monospace; color: #475569;">pay_...</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Payment Status:</span>
+          <span class="info-value" id="dispPaymentStatus" style="color: #16a34a;">🟢 Paid Successfully</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Total Amount:</span>
+          <span class="info-value" id="dispOrderTotal" style="font-size: 1.1rem; color: #16a34a;">₹0.00</span>
+        </div>
+      </div>
+
+      <div class="actions-group">
+        <a id="btnTrackOrder" href="orders.html" class="btn btn-primary" style="padding: 12px 24px; font-weight: 700;">
+          <i class="fas fa-location-arrow"></i> Track Order Status
+        </a>
+        <a href="shop.html" class="btn btn-secondary" style="padding: 12px 24px; font-weight: 700;">
+          <i class="fas fa-shopping-basket"></i> Continue Shopping
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const orderNum = params.get('order') || 'BB' + Date.now().toString().slice(-8);
+      const total = params.get('total') || '0.00';
+      const eta = params.get('eta') || '15–30 minutes';
+      const method = params.get('method') || 'Cash on Delivery';
+      const paymentId = params.get('payment_id');
+
+      document.getElementById('dispOrderNumber').textContent = orderNum;
+      document.getElementById('dispOrderTotal').textContent = '₹' + total;
+      document.getElementById('dispOrderEta').textContent = '⚡ ' + eta;
+      document.getElementById('dispPaymentMethod').textContent = method;
+
+      if (paymentId) {
+        document.getElementById('rowPaymentId').style.display = 'flex';
+        document.getElementById('dispPaymentId').textContent = paymentId;
+        document.getElementById('dispPaymentStatus').innerHTML = '<span style="color: #16a34a;">🟢 Paid Online</span>';
+      } else {
+        document.getElementById('dispPaymentStatus').innerHTML = '<span style="color: #d97706;">🟡 Pending upon Delivery (COD)</span>';
+      }
+
+      const trackBtn = document.getElementById('btnTrackOrder');
+      trackBtn.href = `order-details.html?order=${encodeURIComponent(orderNum)}`;
+    });
+  </script>
+</body>
+</html>

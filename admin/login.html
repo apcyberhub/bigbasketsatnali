@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal Login | Big Basket Satnali</title>
+  <link rel="icon" type="image/png" href="../assets/logo.png">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <style>
+    body {
+      background: radial-gradient(circle at top, #1e293b, #0f172a);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .admin-login-card {
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      width: 100%;
+      max-width: 440px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .login-header {
+      background-color: #0f172a;
+      padding: 32px 30px 24px;
+      text-align: center;
+      border-bottom: 3px solid var(--admin-primary);
+    }
+
+    .login-logo {
+      height: 48px;
+      margin-bottom: 12px;
+    }
+
+    .login-badge {
+      display: inline-block;
+      background-color: var(--admin-primary);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+
+    .login-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .login-subtitle {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .login-body {
+      padding: 30px;
+    }
+
+    .alert-box {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .alert-danger {
+      background-color: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+    }
+
+    .alert-success {
+      background-color: #dcfce7;
+      color: #16a34a;
+      border: 1px solid #86efac;
+    }
+
+    .demo-credentials-box {
+      background-color: #f8fafc;
+      border: 1px dashed var(--admin-border);
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 20px;
+      font-size: 0.8rem;
+    }
+
+    .demo-credentials-box strong {
+      color: var(--admin-primary);
+    }
+
+    .login-footer {
+      padding: 16px 30px;
+      background-color: #f8fafc;
+      border-top: 1px solid var(--admin-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+    }
+
+    .back-link {
+      color: var(--admin-text-muted);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .back-link:hover {
+      color: var(--admin-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-login-card">
+    <div class="login-header">
+      <img src="../assets/logo.png" alt="Big Basket" class="login-logo">
+      <div><span class="login-badge"><i class="fas fa-shield-alt"></i> Staff & Admin Portal</span></div>
+      <h1 class="login-title">Administrator Sign In</h1>
+      <p class="login-subtitle">Secure access to inventory, orders & store management</p>
+    </div>
+
+    <div class="login-body">
+      <!-- Error / Success Alert -->
+      <div id="loginAlert" class="alert-box alert-danger" style="display: none;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span id="alertMessage">Invalid credentials</span>
+      </div>
+
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label class="form-label" for="adminIdentifier">Admin Email or Mobile <span class="required">*</span></label>
+          <input type="text" id="adminIdentifier" class="form-control" placeholder="e.g. admin@bigbasket.local" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="adminPassword">Password <span class="required">*</span></label>
+          <div style="position: relative;">
+            <input type="password" id="adminPassword" class="form-control" placeholder="Enter admin password" required autocomplete="current-password" style="padding-right: 40px;">
+            <button type="button" id="btnTogglePass" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b;">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btnAdminSubmit" style="width: 100%; padding: 12px; font-size: 0.95rem; font-weight: 700;">
+          <i class="fas fa-lock"></i> Secure Admin Sign In
+        </button>
+      </form>
+
+      <!-- Demo Admin Credentials Quick Fill Box -->
+      <div class="demo-credentials-box">
+        <div style="font-weight: 700; margin-bottom: 4px; color: #0f172a;">
+          <i class="fas fa-key"></i> Demo Super Admin Credentials:
+        </div>
+        <div>Email: <strong>admin@bigbasket.local</strong> (or <code>9876543210</code>)</div>
+        <div>Password: <strong>admin123</strong> (or <code>password123</code>)</div>
+        <button type="button" id="btnAutoFillDemo" class="btn btn-secondary btn-sm" style="margin-top: 8px; width: 100%;">
+          ⚡ Quick Auto-Fill Demo Admin
+        </button>
+      </div>
+    </div>
+
+    <div class="login-footer">
+      <a href="../login.html" class="back-link">
+        <i class="fas fa-user"></i> Customer Login
+      </a>
+      <a href="../index.html" class="back-link">
+        <i class="fas fa-store"></i> Customer Store ➔
+      </a>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('adminLoginForm');
+      const alertBox = document.getElementById('loginAlert');
+      const alertMsg = document.getElementById('alertMessage');
+      const submitBtn = document.getElementById('btnAdminSubmit');
+      const toggleBtn = document.getElementById('btnTogglePass');
+      const passInput = document.getElementById('adminPassword');
+      const autoFillBtn = document.getElementById('btnAutoFillDemo');
+
+      // Password visibility toggle
+      if (toggleBtn && passInput) {
+        toggleBtn.addEventListener('click', () => {
+          const isPass = passInput.type === 'password';
+          passInput.type = isPass ? 'text' : 'password';
+          toggleBtn.innerHTML = isPass ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+        });
+      }
+
+      // Auto-fill demo
+      if (autoFillBtn) {
+        autoFillBtn.addEventListener('click', () => {
+          document.getElementById('adminIdentifier').value = 'admin@bigbasket.local';
+          document.getElementById('adminPassword').value = 'admin123';
+        });
+      }
+
+      // Form submission
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const identifier = document.getElementById('adminIdentifier').value.trim();
+        const password = document.getElementById('adminPassword').value;
+
+        alertBox.style.display = 'none';
+
+        if (!identifier || !password) {
+          showAlert('Please fill in both Email/Mobile and Password.', 'danger');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+
+        try {
+          // 1. Attempt FastAPI backend authentication
+          let loggedInUser = null;
+          let authToken = null;
+
+          try {
+            const apiHost = (window.location.hostname && window.location.hostname !== '') ? window.location.hostname : '127.0.0.1';
+            const authUrl = (window.location.port === '8000')
+              ? `${window.location.protocol}//${window.location.host}/api/auth/login`
+              : `http://${apiHost}:8000/api/auth/login`;
+
+            const res = await fetch(authUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ identifier: identifier.toLowerCase(), password })
+            });
+
+            if (res.ok) {
+              const resData = await res.json();
+              if (resData && resData.success && resData.data) {
+                loggedInUser = resData.data.user;
+                authToken = resData.data.access_token;
+              }
+            }
+          } catch (netErr) {
+            // Backend offline fallback
+          }
+
+          // 2. Offline fallback check for demo administrator
+          if (!loggedInUser) {
+            const cleanId = identifier.toLowerCase();
+            const isAdminDemo = (cleanId === 'admin@bigbasket.local' || cleanId === 'abhishek.sharma@example.com' || cleanId === '9876543210') &&
+                                (password === 'admin123' || password === 'password123');
+
+            if (isAdminDemo) {
+              loggedInUser = {
+                id: 1,
+                full_name: 'Abhishek Sharma (Admin)',
+                email: 'admin@bigbasket.local',
+                phone: '9876543210',
+                is_admin: true
+              };
+              authToken = 'demo_admin_jwt_token_local';
+            }
+          }
+
+          // 3. Validate Administrator Role
+          if (!loggedInUser) {
+            showAlert('Invalid admin credentials. Please check your email/mobile and password.', 'danger');
+            resetSubmitBtn();
+            return;
+          }
+
+          if (!loggedInUser.is_admin) {
+            showAlert('Access Denied: This account does NOT have Administrator privileges. Please use the Customer Login.', 'danger');
+            resetSubmitBtn();
+            return;
+          }
+
+          // 4. Save Admin Session
+          localStorage.setItem('bigbasket_auth_token', authToken);
+          localStorage.setItem('bigbasket_user', JSON.stringify(loggedInUser));
+          sessionStorage.setItem('bigbasket_auth_token', authToken);
+          sessionStorage.setItem('bigbasket_user', JSON.stringify(loggedInUser));
+
+          showAlert(`Welcome, ${loggedInUser.full_name}! Redirecting to Admin Dashboard...`, 'success');
+
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 800);
+
+        } catch (err) {
+          showAlert(err.message || 'An error occurred while signing in.', 'danger');
+          resetSubmitBtn();
+        }
+      });
+
+      function showAlert(msg, type) {
+        alertBox.className = `alert-box alert-${type}`;
+        alertBox.innerHTML = type === 'success' 
+          ? `<i class="fas fa-check-circle"></i> <span>${msg}</span>`
+          : `<i class="fas fa-exclamation-triangle"></i> <span>${msg}</span>`;
+        alertBox.style.display = 'flex';
+      }
+
+      function resetSubmitBtn() {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-lock"></i> Secure Admin Sign In';
+      }
+    });
+  </script>
+</body>
+</html>

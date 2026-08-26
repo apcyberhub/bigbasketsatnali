@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View and buy your saved grocery items from your Big Basket Satnali wishlist.">
+  <title>My Wishlist — Big Basket Satnali</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/products.css">
+  <link rel="stylesheet" href="css/account.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-main">
+        <a href="index.html" class="brand-logo" aria-label="Big Basket Satnali Home">
+          <img src="assets/logo/logo.png" alt="Big Basket Satnali" class="brand-logo-img">
+        </a>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <a href="shop.html" class="btn btn-secondary btn-sm">🛒 Explore Shop</a>
+          <a href="cart.html" class="action-btn cart-btn">
+            <span class="action-icon">🛍️</span>
+            <span class="cart-badge-count">0</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <div class="container">
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <ol class="breadcrumb-list">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item"><a href="account.html">My Account</a></li>
+        <li class="breadcrumb-separator">/</li>
+        <li class="breadcrumb-item active" aria-current="page">My Wishlist</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Wishlist Page Layout -->
+  <main class="container">
+    <div class="account-page-layout">
+      <!-- Left Sidebar -->
+      <aside class="account-sidebar">
+        <div class="account-user-card">
+          <div class="account-avatar">👤</div>
+          <div class="account-user-info">
+            <div class="account-user-name" id="sidebar-user-name">Abhishek Sharma</div>
+            <div class="account-user-phone" id="sidebar-user-phone">+91 98765 43210</div>
+          </div>
+        </div>
+
+        <ul class="account-nav-list">
+          <li class="account-nav-item"><a href="account.html">🏠 Dashboard</a></li>
+          <li class="account-nav-item"><a href="orders.html">📦 My Orders</a></li>
+          <li class="account-nav-item active"><a href="wishlist.html">❤️ My Wishlist</a></li>
+          <li class="account-nav-item"><a href="addresses.html">📍 Saved Addresses</a></li>
+          <li class="account-nav-item"><a href="profile.html">⚙️ Profile Settings</a></li>
+          <li class="account-nav-divider"></li>
+          <li class="account-nav-item">
+            <button type="button" onclick="BigBasketAuth.logoutUser()" style="color: #dc2626;">🚪 Logout</button>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Right Main Wishlist Content -->
+      <section class="account-main-content">
+        <div class="content-card">
+          <div class="content-card-header">
+            <div>
+              <h1 class="content-card-title">My Saved Wishlist</h1>
+              <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin: 0.2rem 0 0 0;">
+                <span id="wishlist-count-badge">0 items</span> saved for quick re-ordering.
+              </p>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-add-all-cart" onclick="addAllWishlistToCart()">
+              🛒 Add All to Cart
+            </button>
+          </div>
+
+          <!-- Wishlist Products Grid -->
+          <div id="wishlist-grid" class="products-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.25rem;"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" style="margin-top: 4rem;">
+    <div class="container">
+      <div class="footer-bottom">
+        <div class="footer-bottom-content">
+          <p class="copyright-text">© 2026 Big Basket Satnali. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/wishlist.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!BigBasketAuth.requireAuth('wishlist.html')) return;
+
+      const user = BigBasketAuth.getCurrentUser();
+      if (user) {
+        document.getElementById('sidebar-user-name').textContent = user.name;
+        document.getElementById('sidebar-user-phone').textContent = user.mobile ? `+91 ${user.mobile}` : user.email;
+      }
+
+      renderWishlistPage();
+    });
+
+    function renderWishlistPage() {
+      const grid = document.getElementById('wishlist-grid');
+      const countBadge = document.getElementById('wishlist-count-badge');
+      const addAllBtn = document.getElementById('btn-add-all-cart');
+      if (!grid) return;
+
+      const items = window.BigBasketWishlist ? BigBasketWishlist.getItems() : [];
+      if (countBadge) countBadge.textContent = `${items.length} ${items.length === 1 ? 'item' : 'items'}`;
+
+      if (items.length === 0) {
+        if (addAllBtn) addAllBtn.style.display = 'none';
+        grid.innerHTML = `
+          <div class="empty-state-card" style="grid-column: 1 / -1; text-align: center; padding: 4rem 1.5rem; background: var(--color-background-alt); border: 1px solid var(--color-border); border-radius: var(--radius-lg);">
+            <div style="font-size: 3.5rem; margin-bottom: 0.75rem;">❤️</div>
+            <h3>Your Wishlist is Empty</h3>
+            <p style="color: var(--color-text-secondary); margin-bottom: 1.5rem;">Explore our grocery catalogue and tap the heart icon to save products.</p>
+            <a href="shop.html" class="btn btn-primary">Start Shopping</a>
+          </div>
+        `;
+        return;
+      }
+
+      if (addAllBtn) addAllBtn.style.display = 'inline-flex';
+
+      grid.innerHTML = items.map(p => `
+        <div class="product-card" style="display: flex; flex-direction: column;">
+          <div class="product-image-wrap">
+            <span class="product-emoji" style="font-size: 3rem;">${p.emoji || '🛒'}</span>
+            <button type="button" class="wishlist-btn active" onclick="removeFromWishlist('${p.id}')" title="Remove from Wishlist" aria-label="Remove from Wishlist">
+              ❤️
+            </button>
+          </div>
+          <div class="product-card-body" style="flex: 1; display: flex; flex-direction: column;">
+            <span class="product-brand">${p.brand || 'Big Basket'}</span>
+            <h3 class="product-title" style="font-size: 0.95rem;">
+              <a href="product.html?id=${p.id}">${p.name}</a>
+            </h3>
+            <span class="product-weight">${p.weight || ''}</span>
+            <div class="product-pricing" style="margin-top: auto; padding-top: 0.75rem;">
+              <span class="price-current">₹${p.sellingPrice || p.price}</span>
+              ${p.mrp && p.mrp > (p.sellingPrice || p.price) ? `<span class="price-mrp">₹${p.mrp}</span>` : ''}
+            </div>
+            <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem;">
+              <button type="button" class="btn btn-primary btn-sm btn-block" onclick="addWishlistItemToCart('${p.id}')">
+                🛒 Add to Cart
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="removeFromWishlist('${p.id}')" title="Remove" style="padding: 0.4rem 0.6rem;">
+                🗑️
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function removeFromWishlist(id) {
+      if (window.BigBasketWishlist) {
+        BigBasketWishlist.removeItem(id);
+        renderWishlistPage();
+      }
+    }
+
+    function addWishlistItemToCart(id) {
+      if (window.BigBasketAPI && window.BigBasketCart) {
+        const prod = BigBasketAPI.getProduct(id);
+        if (prod) {
+          BigBasketCart.addItem(prod, 1);
+          if (window.LocalMartUI) LocalMartUI.showToast(`Added ${prod.name} to cart!`, 'success');
+        }
+      }
+    }
+
+    function addAllWishlistToCart() {
+      if (window.BigBasketWishlist && window.BigBasketCart && window.BigBasketAPI) {
+        const items = BigBasketWishlist.getItems();
+        items.forEach(item => {
+          const prod = BigBasketAPI.getProduct(item.id);
+          if (prod) BigBasketCart.addItem(prod, 1);
+        });
+        if (window.LocalMartUI) LocalMartUI.showToast(`Added all ${items.length} items to cart!`, 'success');
+      }
+    }
+  </script>
+</body>
+</html>

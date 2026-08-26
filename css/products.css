@@ -1,0 +1,318 @@
+/* ==========================================================================
+   PRODUCT CARDS & HORIZONTAL SCROLL CAROUSEL (RED THEME)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Product Carousel Wrapper
+   -------------------------------------------------------------------------- */
+.product-section {
+  padding: 2rem 0;
+}
+
+.carousel-container {
+  position: relative;
+}
+
+.product-carousel {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 0.5rem 0.25rem 1.25rem 0.25rem;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.product-carousel::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* Carousel Navigation Arrows */
+.carousel-btn {
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: var(--color-text-main);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  opacity: 0.95;
+}
+
+.carousel-btn:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 6px 16px rgba(216, 35, 42, 0.3);
+}
+
+.carousel-btn-prev {
+  left: -18px;
+}
+
+.carousel-btn-next {
+  right: -18px;
+}
+
+.carousel-btn:disabled, .carousel-btn.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Individual Product Card
+   -------------------------------------------------------------------------- */
+.product-card {
+  flex: 0 0 220px;
+  width: 220px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all var(--transition-spring);
+  position: relative;
+  user-select: none;
+}
+
+.product-card:hover {
+  border-color: var(--color-primary-100);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-4px);
+}
+
+/* Product Card Badges */
+.card-badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 2;
+}
+
+/* Product Image Box */
+.product-image-box {
+  width: 100%;
+  height: 140px;
+  background-color: #f8fafc;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--spacing-sm);
+  padding: 0.5rem;
+}
+
+.product-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform var(--transition-base);
+}
+
+.product-card:hover .product-img {
+  transform: scale(1.06);
+}
+
+/* Fallback SVG/Visual Illustration */
+.product-art {
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+}
+
+.product-eta-tag {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* Product Details */
+.product-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-brand {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  margin-bottom: 2px;
+}
+
+.product-name {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-text-main);
+  line-height: 1.35;
+  min-height: 2.7em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.product-weight {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.product-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.rating-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background-color: #fef3c7;
+  color: #92400e;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+}
+
+.rating-count {
+  font-size: 0.7rem;
+  color: var(--color-text-light);
+}
+
+/* Pricing & Action Row */
+.product-card-bottom {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--color-border-light);
+}
+
+.price-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.selling-price {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+  line-height: 1.2;
+}
+
+.mrp-price {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-text-light);
+  text-decoration: line-through;
+}
+
+/* Add Button & Quantity Stepper */
+.action-wrap {
+  position: relative;
+}
+
+.add-btn {
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  padding: 0.35rem 1rem;
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  transition: all var(--transition-fast);
+  box-shadow: 0 1px 3px rgba(216, 35, 42, 0.1);
+}
+
+.add-btn:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(216, 35, 42, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Interactive Stepper (when product is in cart) */
+.qty-stepper {
+  display: none;
+  align-items: center;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(216, 35, 42, 0.3);
+}
+
+.qty-stepper.active {
+  display: flex;
+}
+
+.add-btn.hidden {
+  display: none;
+}
+
+.qty-btn {
+  background: transparent;
+  color: #ffffff;
+  border: none;
+  width: 28px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1rem;
+  transition: background-color var(--transition-fast);
+}
+
+.qty-btn:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.qty-value {
+  padding: 0 6px;
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+  min-width: 20px;
+  text-align: center;
+}

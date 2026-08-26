@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add / Edit Product | Big Basket Admin</title>
+  <link rel="icon" type="image/png" href="../assets/logo.png">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Big Basket" class="sidebar-logo">
+        <div class="sidebar-brand">
+          <span>Big Basket</span>
+          <span class="sidebar-badge">Admin Panel</span>
+        </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="menu-label">Main</li>
+        <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a></li>
+        
+        <li class="menu-label">Store Operations</li>
+        <li class="nav-item"><a href="products.html" class="nav-link active"><i class="fas fa-boxes"></i> <span>Products</span></a></li>
+        <li class="nav-item"><a href="categories.html" class="nav-link"><i class="fas fa-tags"></i> <span>Categories</span></a></li>
+        <li class="nav-item"><a href="inventory.html" class="nav-link"><i class="fas fa-warehouse"></i> <span>Inventory & Stock</span></a></li>
+        <li class="nav-item"><a href="orders.html" class="nav-link"><i class="fas fa-shopping-bag"></i> <span>Orders</span></a></li>
+        <li class="nav-item"><a href="customers.html" class="nav-link"><i class="fas fa-users"></i> <span>Customers</span></a></li>
+        <li class="nav-item"><a href="coupons.html" class="nav-link"><i class="fas fa-ticket-alt"></i> <span>Coupons</span></a></li>
+
+        <li class="menu-label">Analytics & Config</li>
+        <li class="nav-item"><a href="reports.html" class="nav-link"><i class="fas fa-chart-line"></i> <span>Sales Reports</span></a></li>
+        <li class="nav-item"><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i> <span>Store Settings</span></a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar">AD</div>
+          <div class="user-info">
+            <div class="user-name">Admin</div>
+            <div class="user-role">Super Administrator</div>
+          </div>
+          <button type="button" class="btn-logout-icon btn-logout-admin" title="Sign Out">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      <!-- Topbar -->
+      <header class="admin-topbar">
+        <div class="topbar-left">
+          <button type="button" class="btn-sidebar-toggle" id="btnSidebarToggle"><i class="fas fa-bars"></i></button>
+        </div>
+        <div class="topbar-right">
+          <a href="../index.html" target="_blank" class="btn-view-store"><i class="fas fa-external-link-alt"></i> View Customer Store</a>
+          <button type="button" class="btn-icon-topbar btn-logout-admin" title="Sign Out"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="admin-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="formTitle">Add New Product</h1>
+            <p class="page-subtitle" id="formSubtitle">Create a new item listing for the Big Basket Satnali catalog.</p>
+          </div>
+          <div class="page-actions">
+            <a href="products.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Products</a>
+          </div>
+        </div>
+
+        <form id="productForm">
+          <div class="admin-card">
+            <div class="card-header">
+              <h2 class="card-title">Basic Information</h2>
+            </div>
+            <div class="card-body">
+              <div class="form-grid-2">
+                <div class="form-group full-width">
+                  <label class="form-label" for="prodName">Product Name <span class="required">*</span></label>
+                  <input type="text" id="prodName" class="form-control" placeholder="e.g. Fresh Farm Strawberries" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prodSku">SKU Code <span class="required">*</span></label>
+                  <input type="text" id="prodSku" class="form-control" placeholder="e.g. SKU-STRW-250G" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prodBrand">Brand <span class="required">*</span></label>
+                  <input type="text" id="prodBrand" class="form-control" placeholder="e.g. Fresho / Amul / Fortune" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prodCategory">Category <span class="required">*</span></label>
+                  <select id="prodCategory" class="form-control" required>
+                    <option value="">Loading categories...</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prodSubcategory">Subcategory Name</label>
+                  <input type="text" id="prodSubcategory" class="form-control" placeholder="e.g. Fresh Fruits / Organic">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pricing & Stock Details -->
+          <div class="admin-card">
+            <div class="card-header">
+              <h2 class="card-title">Pricing & Stock Inventory</h2>
+            </div>
+            <div class="card-body">
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label class="form-label" for="prodPrice">Selling Price (₹) <span class="required">*</span></label>
+                  <input type="number" step="0.01" min="0" id="prodPrice" class="form-control" placeholder="120.00" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prodMrp">MRP (₹) <span class="required">*</span></label>
+                  <input type="number" step="0.01" min="0" id="prodMrp" class="form-control" placeholder="150.00" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prodCalculatedDiscount">Calculated Discount</label>
+                  <input type="text" id="prodCalculatedDiscount" class="form-control" readonly style="background-color: #f8fafc; font-weight: 600; color: #d8232a;" value="0% OFF">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prodStock">Stock Quantity <span class="required">*</span></label>
+                  <input type="number" min="0" id="prodStock" class="form-control" value="50" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prodLowThreshold">Low Stock Alert Threshold</label>
+                  <input type="number" min="1" id="prodLowThreshold" class="form-control" value="10">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prodUnit">Unit of Measure</label>
+                  <input type="text" id="prodUnit" class="form-control" placeholder="kg, packet, piece, carton" value="piece">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Attributes & Media -->
+          <div class="admin-card">
+            <div class="card-header">
+              <h2 class="card-title">Media & Display Attributes</h2>
+            </div>
+            <div class="card-body">
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label class="form-label" for="prodWeight">Weight / Pack Size</label>
+                  <input type="text" id="prodWeight" class="form-control" placeholder="e.g. 500 g, 1 L, 1 kg">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prodEmoji">Fallback Emoji Icon</label>
+                  <input type="text" id="prodEmoji" class="form-control" value="🛒" placeholder="e.g. 🍓, 🥛, 🍞">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prodBadge">Badge Label</label>
+                  <input type="text" id="prodBadge" class="form-control" placeholder="e.g. Bestseller, Organic, Fresh">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prodEta">Delivery ETA</label>
+                  <input type="text" id="prodEta" class="form-control" value="10–15 mins">
+                </div>
+                <div class="form-group full-width">
+                  <label class="form-label" for="prodTags">Search Tags (Comma separated)</label>
+                  <input type="text" id="prodTags" class="form-control" placeholder="strawberry, fresh fruit, organic, berry">
+                </div>
+                <div class="form-group full-width">
+                  <label class="form-label" for="product-image-input">Product Image</label>
+                  <input
+                    type="file"
+                    id="product-image-input"
+                    name="image"
+                    accept="image/jpeg,image/png,image/webp,image/jpg"
+                    hidden
+                  >
+                  <div class="image-upload-zone" id="imageUploadZone">
+                    <label for="product-image-input" class="upload-trigger" style="display: block; cursor: pointer; width: 100%; height: 100%;">
+                      <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                      <div class="upload-text">Click to upload product image</div>
+                      <div class="upload-subtext">JPG, PNG, or WEBP (Max 5MB)</div>
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group full-width">
+                  <label class="form-label" for="prodShortDesc">Short Summary</label>
+                  <input type="text" id="prodShortDesc" class="form-control" placeholder="Freshly picked farm strawberries, rich in antioxidants.">
+                </div>
+                <div class="form-group full-width">
+                  <label class="form-label" for="prodDescription">Full Product Description</label>
+                  <textarea id="prodDescription" class="form-control" rows="4" placeholder="Detailed product specifications, nutritional facts, and origin."></textarea>
+                </div>
+              </div>
+
+              <!-- Toggles -->
+              <div style="display: flex; gap: 30px; margin-top: 15px; border-top: 1px solid var(--admin-border); padding-top: 20px;">
+                <label class="toggle-wrapper">
+                  <div class="switch">
+                    <input type="checkbox" id="prodIsActive" checked>
+                    <span class="slider"></span>
+                  </div>
+                  <span class="toggle-label">Active / Visible on Store</span>
+                </label>
+                <label class="toggle-wrapper">
+                  <div class="switch">
+                    <input type="checkbox" id="prodIsFeatured">
+                    <span class="slider"></span>
+                  </div>
+                  <span class="toggle-label">Featured Product on Homepage</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 40px;">
+            <a href="products.html" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary" id="btnSubmitProduct">
+              <i class="fas fa-plus"></i> Save Product
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/product-form.js"></script>
+</body>
+</html>

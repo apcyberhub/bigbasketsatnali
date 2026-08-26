@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /account.html
+Disallow: /orders.html
+Disallow: /order-details.html
+Disallow: /payment-history.html
+Disallow: /checkout.html
+Disallow: /profile.html
+Disallow: /addresses.html
+Disallow: /wishlist.html
+Disallow: /api/
+
+Sitemap: https://bigbasketsatnali.com/sitemap.xml

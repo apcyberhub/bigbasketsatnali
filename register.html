@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create a Big Basket Satnali customer account to order fresh groceries with superfast local delivery.">
+  <title>Register — Big Basket Satnali</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body style="background: var(--color-background-alt);">
+
+  <div class="auth-page-wrapper">
+    <div class="auth-card" style="max-width: 500px;">
+      <!-- Logo -->
+      <a href="index.html" class="auth-brand-logo" aria-label="Big Basket Home">
+        <img src="assets/logo/logo.png" alt="Big Basket Satnali" style="height: 52px; width: auto;">
+      </a>
+
+      <h1 class="auth-card-title">Create Account</h1>
+      <p class="auth-card-subtitle">Join Big Basket for 10-15 min local grocery delivery</p>
+
+      <!-- Global Feedback Alert -->
+      <div id="register-alert" style="display: none; padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 600; margin-bottom: 1.25rem;"></div>
+
+      <!-- Registration Form -->
+      <form id="register-form" novalidate>
+        <!-- Full Name -->
+        <div class="form-group">
+          <label for="reg-name" class="form-label">Full Name <span class="required">*</span></label>
+          <div class="input-icon-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="reg-name" class="form-input" placeholder="e.g. Abhishek Sharma" required>
+          </div>
+          <div class="form-feedback" id="name-feedback">Please enter your full name.</div>
+        </div>
+
+        <!-- Mobile Number -->
+        <div class="form-group">
+          <label for="reg-mobile" class="form-label">Mobile Number <span class="required">*</span></label>
+          <div class="input-icon-wrap">
+            <span class="input-icon">📱</span>
+            <input type="tel" id="reg-mobile" class="form-input" placeholder="10-digit mobile number" maxlength="10" required>
+          </div>
+          <div class="form-feedback" id="mobile-feedback">Please enter a valid 10-digit Indian mobile number.</div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="reg-email" class="form-label">Email Address <span class="required">*</span></label>
+          <div class="input-icon-wrap">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="reg-email" class="form-input" placeholder="e.g. yourname@gmail.com" required>
+          </div>
+          <div class="form-feedback" id="email-feedback">Please enter a valid email address.</div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="reg-password" class="form-label">Password <span class="required">*</span></label>
+          <div class="input-icon-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="reg-password" class="form-input" placeholder="At least 6 characters" minlength="6" required>
+            <button type="button" class="password-toggle-btn" id="toggle-reg-pass" aria-label="Toggle password visibility">👁️</button>
+          </div>
+          <div class="form-feedback" id="pass-feedback">Password must be at least 6 characters.</div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label for="reg-confirm-password" class="form-label">Confirm Password <span class="required">*</span></label>
+          <div class="input-icon-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="reg-confirm-password" class="form-input" placeholder="Re-enter password" required>
+          </div>
+          <div class="form-feedback" id="confirm-feedback">Passwords do not match.</div>
+        </div>
+
+        <!-- Terms Checkbox -->
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label class="form-checkbox-label">
+            <input type="checkbox" id="reg-terms" required>
+            <span>I agree to the <a href="shop.html">Terms & Conditions</a> and <a href="shop.html">Privacy Policy</a>.</span>
+          </label>
+          <div class="form-feedback" id="terms-feedback">You must accept terms to create an account.</div>
+        </div>
+
+        <!-- Submit CTA -->
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-reg-submit" style="font-size: 1rem; font-weight: 800;">
+          Create Account ➔
+        </button>
+      </form>
+
+      <!-- Switch to Login -->
+      <div class="auth-card-footer">
+        Already have an account? <a href="login.html">Sign In</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Toggle password
+      const toggleBtn = document.getElementById('toggle-reg-pass');
+      const passInput = document.getElementById('reg-password');
+      if (toggleBtn && passInput) {
+        toggleBtn.addEventListener('click', () => {
+          const isPassword = passInput.type === 'password';
+          passInput.type = isPassword ? 'text' : 'password';
+          toggleBtn.textContent = isPassword ? '🙈' : '👁️';
+        });
+      }
+
+      // Submit Form
+      const form = document.getElementById('register-form');
+      const alertBox = document.getElementById('register-alert');
+      const submitBtn = document.getElementById('btn-reg-submit');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('reg-name').value.trim();
+        const mobile = document.getElementById('reg-mobile').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
+        const password = document.getElementById('reg-password').value;
+        const confirmPassword = document.getElementById('reg-confirm-password').value;
+        const terms = document.getElementById('reg-terms').checked;
+
+        // Reset errors
+        document.querySelectorAll('.form-input').forEach(i => i.classList.remove('is-invalid'));
+        document.querySelectorAll('.form-feedback').forEach(f => f.classList.remove('is-error'));
+        alertBox.style.display = 'none';
+
+        let hasError = false;
+
+        if (!name) {
+          document.getElementById('reg-name').classList.add('is-invalid');
+          document.getElementById('name-feedback').classList.add('is-error');
+          hasError = true;
+        }
+
+        if (!mobile || !/^\d{10}$/.test(mobile)) {
+          document.getElementById('reg-mobile').classList.add('is-invalid');
+          document.getElementById('mobile-feedback').classList.add('is-error');
+          hasError = true;
+        }
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          document.getElementById('reg-email').classList.add('is-invalid');
+          document.getElementById('email-feedback').classList.add('is-error');
+          hasError = true;
+        }
+
+        if (!password || password.length < 6) {
+          document.getElementById('reg-password').classList.add('is-invalid');
+          document.getElementById('pass-feedback').classList.add('is-error');
+          hasError = true;
+        }
+
+        if (password !== confirmPassword) {
+          document.getElementById('reg-confirm-password').classList.add('is-invalid');
+          document.getElementById('confirm-feedback').classList.add('is-error');
+          hasError = true;
+        }
+
+        if (!terms) {
+          document.getElementById('terms-feedback').classList.add('is-error');
+          hasError = true;
+        }
+
+        if (hasError) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Creating Account...';
+
+        try {
+          const res = await BigBasketAuth.registerUser(name, mobile, email, password);
+
+          if (res.success) {
+            alertBox.style.display = 'block';
+            alertBox.style.background = '#dcfce7';
+            alertBox.style.color = '#15803d';
+            alertBox.style.border = '1px solid #bbf7d0';
+            alertBox.textContent = `${res.message} Redirecting to your dashboard...`;
+
+            setTimeout(() => {
+              window.location.href = 'account.html';
+            }, 800);
+          } else {
+            alertBox.style.display = 'block';
+            alertBox.style.background = '#fef2f2';
+            alertBox.style.color = '#dc2626';
+            alertBox.style.border = '1px solid #fecaca';
+            alertBox.textContent = res.message;
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Create Account ➔';
+          }
+        } catch (err) {
+          console.error(err);
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Create Account ➔';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customers Management | Big Basket Admin</title>
+  <link rel="icon" type="image/png" href="../assets/logo.png">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Big Basket" class="sidebar-logo">
+        <div class="sidebar-brand">
+          <span>Big Basket</span>
+          <span class="sidebar-badge">Admin Panel</span>
+        </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="menu-label">Main</li>
+        <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></a></li>
+        
+        <li class="menu-label">Store Operations</li>
+        <li class="nav-item"><a href="products.html" class="nav-link"><i class="fas fa-boxes"></i> <span>Products</span></a></li>
+        <li class="nav-item"><a href="categories.html" class="nav-link"><i class="fas fa-tags"></i> <span>Categories</span></a></li>
+        <li class="nav-item"><a href="inventory.html" class="nav-link"><i class="fas fa-warehouse"></i> <span>Inventory & Stock</span></a></li>
+        <li class="nav-item"><a href="orders.html" class="nav-link"><i class="fas fa-shopping-bag"></i> <span>Orders</span></a></li>
+        <li class="nav-item"><a href="customers.html" class="nav-link active"><i class="fas fa-users"></i> <span>Customers</span></a></li>
+        <li class="nav-item"><a href="coupons.html" class="nav-link"><i class="fas fa-ticket-alt"></i> <span>Coupons</span></a></li>
+        <li class="nav-item"><a href="delivery-zones.html" class="nav-link"><i class="fas fa-map-marker-alt"></i> <span>Delivery Zones</span></a></li>
+
+        <li class="menu-label">Analytics & Config</li>
+        <li class="nav-item"><a href="reports.html" class="nav-link"><i class="fas fa-chart-line"></i> <span>Sales Reports</span></a></li>
+        <li class="nav-item"><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i> <span>Store Settings</span></a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar">AD</div>
+          <div class="user-info">
+            <div class="user-name">Admin</div>
+            <div class="user-role">Super Administrator</div>
+          </div>
+          <button class="btn-logout-icon btn-logout-admin" title="Sign Out">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      <!-- Topbar -->
+      <header class="admin-topbar">
+        <div class="topbar-left">
+          <button class="btn-sidebar-toggle" id="btnSidebarToggle"><i class="fas fa-bars"></i></button>
+        </div>
+        <div class="topbar-right">
+          <a href="../index.html" target="_blank" class="btn-view-store"><i class="fas fa-external-link-alt"></i> View Customer Store</a>
+          <button class="btn-icon-topbar btn-logout-admin" title="Sign Out"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="admin-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Customer Accounts</h1>
+            <p class="page-subtitle">View customer activity, order history, lifetime value, and manage accounts.</p>
+          </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="status-tabs">
+          <div class="status-tab active" data-status="all">All Customers</div>
+          <div class="status-tab" data-status="active">Active</div>
+          <div class="status-tab" data-status="inactive">Disabled / Blocked</div>
+        </div>
+
+        <div class="admin-card">
+          <!-- Toolbar -->
+          <div class="card-body" style="padding-bottom: 0;">
+            <div class="table-toolbar">
+              <div class="table-filters">
+                <div class="filter-input">
+                  <i class="fas fa-search"></i>
+                  <input type="text" id="searchCustomerInput" placeholder="Search by name, email, phone...">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer Table -->
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Phone Number</th>
+                  <th>Total Orders</th>
+                  <th>Lifetime Spend</th>
+                  <th>Account Status</th>
+                  <th>Joined Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="customersTableBody">
+                <tr>
+                  <td colspan="7" class="table-empty-state">
+                    <div class="empty-icon"><i class="fas fa-spinner fa-spin"></i></div>
+                    <div class="empty-title">Loading customers...</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination-wrapper" id="customersPagination"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/customers.js"></script>
+</body>
+</html>

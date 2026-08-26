@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Secure checkout at Big Basket Satnali with express local delivery.">
+  <title>Checkout — Big Basket Satnali</title>
+  <link rel="icon" type="image/png" href="assets/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/cart-checkout.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <style>
+    /* Checkout Master Styles */
+    .checkout-wrapper {
+      padding: 30px 0 60px;
+    }
+
+    .checkout-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 30px;
+      align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+      .checkout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .checkout-step-card {
+      background-color: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition-fast);
+    }
+
+    .checkout-step-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .step-badge {
+      width: 28px;
+      height: 28px;
+      background-color: var(--color-primary);
+      color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .step-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--color-text-main);
+      margin: 0;
+    }
+
+    /* Address Cards */
+    .address-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .address-card {
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      cursor: pointer;
+      position: relative;
+      background-color: #ffffff;
+      transition: all var(--transition-fast);
+    }
+
+    .address-card:hover {
+      border-color: #cbd5e1;
+      transform: translateY(-2px);
+    }
+
+    .address-card.selected {
+      border-color: var(--color-primary);
+      background-color: #fef2f2;
+    }
+
+    .address-card .tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background-color: #e2e8f0;
+      color: #475569;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .address-card.selected .tag {
+      background-color: var(--color-primary);
+      color: #ffffff;
+    }
+
+    .address-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--color-text-main);
+      margin-bottom: 4px;
+    }
+
+    .address-phone {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      margin-bottom: 6px;
+    }
+
+    .address-text {
+      font-size: 0.85rem;
+      color: #334155;
+      line-height: 1.4;
+    }
+
+    .btn-add-address {
+      border: 2px dashed #cbd5e1;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--color-primary);
+      font-weight: 600;
+      cursor: pointer;
+      background-color: #f8fafc;
+      transition: all var(--transition-fast);
+      min-height: 140px;
+    }
+
+    .btn-add-address:hover {
+      border-color: var(--color-primary);
+      background-color: #fff1f2;
+    }
+
+    /* Zone & Availability Status */
+    .delivery-status-box {
+      background-color: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .delivery-status-box.unavailable {
+      background-color: #fef2f2;
+      border-color: #fecaca;
+      color: #dc2626;
+    }
+
+    .delivery-status-icon {
+      font-size: 1.5rem;
+      color: #16a34a;
+    }
+
+    .delivery-status-box.unavailable .delivery-status-icon {
+      color: #dc2626;
+    }
+
+    /* Payment Methods */
+    .payment-option-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+    }
+
+    .payment-option-row.active {
+      border-color: var(--color-primary);
+      background-color: #fef2f2;
+    }
+
+    .payment-option-row.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background-color: #f8fafc;
+    }
+
+    .payment-icon {
+      font-size: 1.25rem;
+      width: 32px;
+      text-align: center;
+      color: var(--color-primary);
+    }
+
+    .payment-label {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--color-text-main);
+      flex: 1;
+    }
+
+    .coming-soon-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      background-color: #e2e8f0;
+      color: #64748b;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    /* Right Order Summary */
+    .summary-card {
+      background-color: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 100px;
+    }
+
+    .summary-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--color-text-main);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .summary-items-list {
+      max-height: 220px;
+      overflow-y: auto;
+      margin-bottom: 18px;
+      padding-right: 4px;
+    }
+
+    .summary-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 0.88rem;
+      border-bottom: 1px dashed #f1f5f9;
+    }
+
+    .summary-item-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-item-name {
+      font-weight: 600;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .summary-item-qty {
+      color: var(--color-text-muted);
+      font-size: 0.8rem;
+    }
+
+    .summary-item-price {
+      font-weight: 700;
+      color: var(--color-text-main);
+    }
+
+    /* Coupon Box */
+    .coupon-box {
+      margin-bottom: 20px;
+    }
+
+    .coupon-input-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .coupon-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .applied-coupon-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #dcfce7;
+      border: 1px solid #86efac;
+      color: #15803d;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .btn-remove-coupon {
+      background: none;
+      border: none;
+      color: #dc2626;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Price Breakdown */
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.92rem;
+      color: #475569;
+    }
+
+    .price-row.total-row {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-text-main);
+      padding-top: 14px;
+      margin-top: 14px;
+      border-top: 2px solid var(--color-border);
+      margin-bottom: 20px;
+    }
+
+    .price-row.discount-row {
+      color: #16a34a;
+      font-weight: 600;
+    }
+
+    /* Alerts / Progress */
+    .checkout-alert {
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .alert-warning {
+      background-color: #fffbeb;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+
+    .alert-success {
+      background-color: #f0fdf4;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    .btn-place-order {
+      width: 100%;
+      padding: 14px 20px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-place-order:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <aside class="top-announcement-bar">
+    <div class="container top-bar-content">
+      <div class="announcement-left">
+        <span class="pulse-dot"></span>
+        <span>🔒 100% Safe & Secure Checkout • Fast Express Local Delivery in Satnali</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-main" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+        <a href="index.html" class="brand-logo" aria-label="Big Basket Satnali Home">
+          <img src="assets/logo.png" alt="Big Basket Satnali" style="height: 44px;">
+        </a>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <a href="cart.html" class="btn btn-secondary btn-sm"><i class="fas fa-shopping-cart"></i> Back to Cart</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs -->
+  <div class="container" style="margin-top: 15px;">
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <ol class="breadcrumb-list" style="display: flex; gap: 8px; font-size: 0.85rem; color: #64748b; list-style: none; padding: 0;">
+        <li><a href="index.html" style="color: #64748b; text-decoration: none;">Home</a></li>
+        <li>/</li>
+        <li><a href="cart.html" style="color: #64748b; text-decoration: none;">Cart</a></li>
+        <li>/</li>
+        <li style="color: var(--color-primary); font-weight: 700;">Checkout</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Main Checkout Container -->
+  <main class="container checkout-wrapper">
+    <div class="checkout-grid">
+      
+      <!-- LEFT COLUMN: Steps -->
+      <div class="checkout-steps-col">
+
+        <!-- Step 1: Delivery Address -->
+        <div class="checkout-step-card">
+          <div class="step-header">
+            <span class="step-badge">1</span>
+            <h2 class="step-title">Select Delivery Address</h2>
+          </div>
+
+          <div id="addressGrid" class="address-grid">
+            <!-- Dynamic addresses loaded via JS -->
+            <div class="address-loading" style="padding: 20px; text-align: center; color: #64748b;">
+              <i class="fas fa-spinner fa-spin"></i> Loading saved addresses...
+            </div>
+          </div>
+
+          <!-- Delivery Zone & ETA Status Indicator -->
+          <div id="deliveryZoneBanner" class="delivery-status-box" style="display: none;">
+            <i class="fas fa-truck-fast delivery-status-icon"></i>
+            <div>
+              <div style="font-weight: 700; color: #0f172a;" id="zoneNameText">Satnali Local Area</div>
+              <div style="font-size: 0.82rem; color: #475569;" id="zoneEtaText">Estimated Delivery: 15–30 minutes</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Payment Method -->
+        <div class="checkout-step-card">
+          <div class="step-header">
+            <span class="step-badge">2</span>
+            <h2 class="step-title">Select Payment Method</h2>
+          </div>
+
+          <div class="payment-methods-list">
+            <!-- Online Payment (Razorpay) -->
+            <div class="payment-option-row active" id="payMethodOnline" onclick="selectPaymentMethod('Online Payment')">
+              <input type="radio" name="payment_method" value="Online Payment" checked style="accent-color: var(--color-primary);">
+              <i class="fas fa-credit-card payment-icon" style="color: var(--color-primary);"></i>
+              <div class="payment-label">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span>Online Payment (Razorpay)</span>
+                  <span style="font-size: 0.72rem; font-weight: 700; background: #ecfdf5; color: #047857; padding: 2px 6px; border-radius: 4px;">FAST & INSTANT</span>
+                </div>
+                <div style="font-size: 0.78rem; font-weight: 400; color: #64748b;">UPI (GPay / PhonePe / Paytm), Credit / Debit Cards, Net Banking & Wallets</div>
+              </div>
+            </div>
+
+            <!-- Cash on Delivery -->
+            <div class="payment-option-row" id="payMethodCOD" onclick="selectPaymentMethod('Cash on Delivery')">
+              <input type="radio" name="payment_method" value="Cash on Delivery" style="accent-color: var(--color-primary);">
+              <i class="fas fa-hand-holding-usd payment-icon"></i>
+              <div class="payment-label">
+                <div>Cash on Delivery (COD)</div>
+                <div style="font-size: 0.78rem; font-weight: 400; color: #64748b;">Pay with cash or UPI QR to delivery agent upon delivery</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Order Summary & Placement -->
+      <div class="checkout-summary-col">
+        <div class="summary-card">
+          <div class="summary-title">
+            <span>Order Summary</span>
+            <span id="summaryItemsCount" style="font-size: 0.85rem; font-weight: 600; color: var(--color-primary);">0 items</span>
+          </div>
+
+          <!-- Items Breakdown -->
+          <div class="summary-items-list" id="summaryItemsList">
+            <!-- Loaded dynamically -->
+          </div>
+
+          <!-- Coupon Box -->
+          <div class="coupon-box">
+            <div id="couponInputContainer">
+              <div class="coupon-input-group">
+                <input type="text" id="couponInput" class="coupon-input" placeholder="Enter Coupon Code (e.g. WELCOME20)">
+                <button type="button" id="btnApplyCoupon" class="btn btn-secondary btn-sm" style="font-weight: 700;">Apply</button>
+              </div>
+              <div id="couponFeedback" style="font-size: 0.8rem; margin-top: 6px; display: none;"></div>
+            </div>
+
+            <div id="appliedCouponContainer" style="display: none;">
+              <div class="applied-coupon-pill">
+                <div>
+                  <i class="fas fa-ticket-alt"></i> <span id="appliedCouponCode">WELCOME20</span>
+                  <div style="font-size: 0.75rem; font-weight: 500;" id="appliedCouponLabel">Coupon discount applied</div>
+                </div>
+                <button type="button" id="btnRemoveCoupon" class="btn-remove-coupon">
+                  <i class="fas fa-times"></i> Remove
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Free Delivery Progress Alert -->
+          <div id="freeDeliveryAlert" class="checkout-alert alert-warning" style="display: none;">
+            <i class="fas fa-info-circle"></i>
+            <span id="freeDeliveryMsg">Add ₹49 more for FREE delivery!</span>
+          </div>
+
+          <!-- Minimum Order Alert -->
+          <div id="minOrderAlert" class="checkout-alert alert-warning" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span id="minOrderMsg">Add ₹29 more to meet the minimum order requirement.</span>
+          </div>
+
+          <!-- Price Calculations -->
+          <div class="price-calculations">
+            <div class="price-row">
+              <span>Item Subtotal</span>
+              <span id="lblSubtotal">₹0.00</span>
+            </div>
+            <div class="price-row discount-row" id="rowDiscount" style="display: none;">
+              <span>Coupon Discount</span>
+              <span id="lblDiscount">-₹0.00</span>
+            </div>
+            <div class="price-row">
+              <span>Delivery Charges</span>
+              <span id="lblDeliveryFee">₹30.00</span>
+            </div>
+            <div class="price-row total-row">
+              <span>To Pay</span>
+              <span id="lblTotalAmount">₹0.00</span>
+            </div>
+          </div>
+
+          <!-- Place Order / Pay Now CTA Button -->
+          <button type="button" id="btnPlaceOrder" class="btn btn-primary btn-place-order">
+            <i class="fas fa-lock"></i> Pay Now with Razorpay
+          </button>
+          <div style="text-align: center; font-size: 0.75rem; color: #64748b; margin-top: 10px;">
+            🔒 256-bit Encrypted & Secure Razorpay Payment Gateway.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Add New Address Modal -->
+  <div id="addressModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #ffffff; border-radius: 12px; max-width: 500px; width: 100%; padding: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="margin: 0; font-size: 1.15rem; font-weight: 700;">Add New Delivery Address</h3>
+        <button type="button" onclick="closeAddressModal()" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b;">✕</button>
+      </div>
+      <form id="newAddressForm">
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Full Name *</label>
+          <input type="text" id="modalFullName" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px;" placeholder="e.g. Abhishek Sharma">
+        </div>
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Phone Number *</label>
+          <input type="tel" id="modalPhone" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px;" placeholder="e.g. 9876543210">
+        </div>
+        <div style="margin-bottom: 12px;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Address Line 1 (House No, Building) *</label>
+          <input type="text" id="modalLine1" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px;" placeholder="e.g. House #42, Main Road">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">City</label>
+            <input type="text" id="modalCity" value="Satnali" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">Pincode *</label>
+            <input type="text" id="modalPincode" value="123024" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px; font-weight: 700; margin-top: 8px;">Save Address & Deliver Here</button>
+      </form>
+  <!-- Payment Failure / Retry Modal -->
+  <div id="paymentFailureModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #ffffff; border-radius: 12px; max-width: 460px; width: 100%; padding: 28px 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); text-align: center;">
+      <div style="width: 60px; height: 60px; border-radius: 50%; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 16px;">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-bottom: 8px;">Payment Not Completed</h3>
+      <p id="paymentFailureMsg" style="font-size: 0.9rem; color: #64748b; margin-bottom: 24px; line-height: 1.5;">
+        Your transaction was interrupted or cancelled. Don't worry, your cart and order details are safe.
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button type="button" id="btnRetryPayment" class="btn btn-primary" style="padding: 12px; font-weight: 700; width: 100%;">
+          <i class="fas fa-redo"></i> Retry Online Payment
+        </button>
+        <button type="button" id="btnSwitchToCOD" class="btn btn-secondary" style="padding: 12px; font-weight: 700; width: 100%;">
+          <i class="fas fa-hand-holding-usd"></i> Switch to Cash on Delivery
+        </button>
+        <button type="button" onclick="closePaymentFailureModal()" style="background: none; border: none; font-size: 0.85rem; color: #64748b; cursor: pointer; padding: 6px;">
+          Back to Checkout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Authentication Guard
+      const token = localStorage.getItem('bigbasket_auth_token') || sessionStorage.getItem('bigbasket_auth_token');
+      const userStr = localStorage.getItem('bigbasket_user') || sessionStorage.getItem('bigbasket_auth_user_v1');
+
+      if (!token && !userStr) {
+        window.location.href = 'login.html?redirect=checkout.html';
+        return;
+      }
+
+      let selectedAddressId = null;
+      let selectedPaymentMethod = 'Online Payment';
+      let appliedCouponCode = null;
+      let isPlacingOrder = false;
+      let cachedSummary = null;
+      let lastPendingOrderId = null;
+
+      // Initialize Cart and Sync with Backend
+      if (window.BigBasketCart) {
+        window.BigBasketCart.init();
+        await window.BigBasketCart.syncBackendCart();
+      }
+
+      // Initialize UI
+      await loadSavedAddresses();
+      await fetchAndRenderSummary();
+      updatePaymentMethodUI();
+
+      // Payment Selection Handler
+      window.selectPaymentMethod = (method) => {
+        selectedPaymentMethod = method;
+        updatePaymentMethodUI();
+      };
+
+      function updatePaymentMethodUI() {
+        const isOnline = selectedPaymentMethod === 'Online Payment';
+        const onlineRow = document.getElementById('payMethodOnline');
+        const codRow = document.getElementById('payMethodCOD');
+        const placeBtn = document.getElementById('btnPlaceOrder');
+
+        if (onlineRow && codRow) {
+          onlineRow.classList.toggle('active', isOnline);
+          codRow.classList.toggle('active', !isOnline);
+          onlineRow.querySelector('input').checked = isOnline;
+          codRow.querySelector('input').checked = !isOnline;
+        }
+
+        if (placeBtn && !isPlacingOrder) {
+          if (isOnline) {
+            const total = cachedSummary ? cachedSummary.total_amount : '';
+            placeBtn.innerHTML = `<i class="fas fa-lock"></i> Pay ${total ? '₹' + total : ''} with Razorpay`;
+          } else {
+            placeBtn.innerHTML = `<i class="fas fa-shield-alt"></i> Place Order (Cash on Delivery)`;
+          }
+        }
+      }
+
+      // Coupon Handlers
+      document.getElementById('btnApplyCoupon').addEventListener('click', async () => {
+        const code = document.getElementById('couponInput').value.trim();
+        if (!code) return;
+
+        const feedbackEl = document.getElementById('couponFeedback');
+        feedbackEl.style.display = 'block';
+        feedbackEl.style.color = '#64748b';
+        feedbackEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking coupon...';
+
+        try {
+          const res = await LocalMartAPI.applyCoupon(code);
+          if (res.success && res.data.valid) {
+            appliedCouponCode = res.data.coupon_code;
+            document.getElementById('couponInputContainer').style.display = 'none';
+            document.getElementById('appliedCouponContainer').style.display = 'block';
+            document.getElementById('appliedCouponCode').textContent = appliedCouponCode;
+            document.getElementById('appliedCouponLabel').textContent = res.data.message;
+            feedbackEl.style.display = 'none';
+            await fetchAndRenderSummary();
+            updatePaymentMethodUI();
+          } else {
+            feedbackEl.style.color = '#dc2626';
+            feedbackEl.textContent = res.message || 'Invalid coupon code.';
+          }
+        } catch (err) {
+          feedbackEl.style.color = '#dc2626';
+          feedbackEl.textContent = err.message || 'Failed to apply coupon.';
+        }
+      });
+
+      document.getElementById('btnRemoveCoupon').addEventListener('click', async () => {
+        appliedCouponCode = null;
+        document.getElementById('couponInputContainer').style.display = 'block';
+        document.getElementById('appliedCouponContainer').style.display = 'none';
+        document.getElementById('couponInput').value = '';
+        await fetchAndRenderSummary();
+        updatePaymentMethodUI();
+      });
+
+      // Place Order / Pay Now Button Handler
+      document.getElementById('btnPlaceOrder').addEventListener('click', async () => {
+        if (isPlacingOrder) return;
+
+        if (!selectedAddressId) {
+          alert('Please select or add a delivery address.');
+          return;
+        }
+
+        if (cachedSummary && !cachedSummary.delivery_available) {
+          alert('Delivery is currently unavailable to the selected pincode.');
+          return;
+        }
+
+        if (cachedSummary && !cachedSummary.meets_minimum_order) {
+          alert(`Minimum order value is ₹${cachedSummary.minimum_order}. Please add ₹${cachedSummary.amount_needed_for_min_order} more to place your order.`);
+          return;
+        }
+
+        const btn = document.getElementById('btnPlaceOrder');
+        isPlacingOrder = true;
+        btn.disabled = true;
+
+        if (selectedPaymentMethod === 'Online Payment') {
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Initializing Razorpay...';
+          await handleOnlinePaymentFlow();
+        } else {
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Placing Order...';
+          await handleCODFlow();
+        }
+      });
+
+      // Cash on Delivery Order Flow
+      async function handleCODFlow() {
+        const idempotencyKey = 'BB_IDEM_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+        try {
+          const res = await LocalMartAPI.createOrder({
+            address_id: selectedAddressId,
+            payment_method: 'Cash on Delivery',
+            coupon_code: appliedCouponCode,
+            idempotency_key: idempotencyKey
+          });
+
+          if (res.success && res.data) {
+            window.location.href = `order-success.html?order=${encodeURIComponent(res.data.order_number)}&total=${encodeURIComponent(res.data.total_amount)}&eta=${encodeURIComponent(res.data.estimated_delivery || '15-30 mins')}&method=Cash on Delivery`;
+          } else {
+            alert(res.message || 'Failed to place order. Please check stock and try again.');
+            resetPlaceOrderBtn();
+          }
+        } catch (err) {
+          alert(err.message || 'Error occurred while placing order.');
+          resetPlaceOrderBtn();
+        }
+      }
+
+      // Online Razorpay Payment Flow
+      async function handleOnlinePaymentFlow() {
+        const idempotencyKey = 'BB_IDEM_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+        try {
+          // 1. Create Internal Order
+          const orderRes = await LocalMartAPI.createOrder({
+            address_id: selectedAddressId,
+            payment_method: 'Online Payment (Razorpay)',
+            coupon_code: appliedCouponCode,
+            idempotency_key: idempotencyKey
+          });
+
+          if (!orderRes.success || !orderRes.data) {
+            alert(orderRes.message || 'Failed to create order.');
+            resetPlaceOrderBtn();
+            return;
+          }
+
+          const order = orderRes.data;
+          lastPendingOrderId = order.id;
+
+          // 2. Ask Backend to Create Razorpay Order
+          const paymentOrderRes = await LocalMartAPI.createPaymentOrder(order.id);
+          if (!paymentOrderRes.success || !paymentOrderRes.data) {
+            alert(paymentOrderRes.message || 'Failed to initialize payment gateway.');
+            resetPlaceOrderBtn();
+            return;
+          }
+
+          const pData = paymentOrderRes.data;
+
+          // 3. Configure and open Razorpay Checkout
+          if (typeof Razorpay === 'undefined') {
+            alert('Online payment is temporarily unavailable. Please try again or choose Cash on Delivery.');
+            resetPlaceOrderBtn();
+            return;
+          }
+
+          const options = {
+            key: pData.key_id,
+            amount: pData.amount,
+            currency: pData.currency || 'INR',
+            name: 'Big Basket Satnali',
+            description: `Order #${pData.order_number}`,
+            image: 'assets/logo.png',
+            order_id: pData.razorpay_order_id,
+            handler: async function (response) {
+              const btn = document.getElementById('btnPlaceOrder');
+              btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying Payment...';
+
+              try {
+                const verifyRes = await LocalMartAPI.verifyPayment({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature
+                });
+
+                if (verifyRes.success) {
+                  window.location.href = `order-success.html?order=${encodeURIComponent(pData.order_number)}&total=${encodeURIComponent(order.total_amount)}&eta=${encodeURIComponent(order.estimated_delivery || '15-30 mins')}&payment_id=${encodeURIComponent(response.razorpay_payment_id)}&method=Online (Razorpay)`;
+                } else {
+                  showPaymentFailureModal(order.id, verifyRes.message || 'Payment signature verification failed.');
+                }
+              } catch (vErr) {
+                showPaymentFailureModal(order.id, vErr.message || 'Payment verification encountered an error.');
+              }
+            },
+            modal: {
+              ondismiss: function () {
+                showPaymentFailureModal(order.id, 'Payment window was closed before completion.');
+              }
+            },
+            prefill: {
+              name: pData.customer_name || '',
+              email: pData.customer_email || '',
+              contact: pData.customer_phone || ''
+            },
+            theme: {
+              color: '#d8232a'
+            }
+          };
+
+          const rzp = new Razorpay(options);
+          rzp.on('payment.failed', function (resp) {
+            const errDesc = (resp.error && resp.error.description) ? resp.error.description : 'Transaction failed.';
+            showPaymentFailureModal(order.id, errDesc);
+          });
+
+          rzp.open();
+        } catch (err) {
+          alert(err.message || 'Error occurred while connecting to payment gateway.');
+          resetPlaceOrderBtn();
+        }
+      }
+
+      function resetPlaceOrderBtn() {
+        isPlacingOrder = false;
+        const placeBtn = document.getElementById('btnPlaceOrder');
+        placeBtn.disabled = false;
+        updatePaymentMethodUI();
+      }
+
+      // Payment Failure / Retry Modal Helpers
+      function showPaymentFailureModal(orderId, message) {
+        lastPendingOrderId = orderId;
+        resetPlaceOrderBtn();
+        document.getElementById('paymentFailureMsg').textContent = message || 'Payment was not completed.';
+        document.getElementById('paymentFailureModal').style.display = 'flex';
+      }
+
+      window.closePaymentFailureModal = () => {
+        document.getElementById('paymentFailureModal').style.display = 'none';
+      };
+
+      document.getElementById('btnRetryPayment').addEventListener('click', async () => {
+        closePaymentFailureModal();
+        if (!lastPendingOrderId) {
+          updatePaymentMethodUI();
+          return;
+        }
+
+        if (typeof Razorpay === 'undefined') {
+          alert('Online payment is temporarily unavailable. Please try again or choose Cash on Delivery.');
+          resetPlaceOrderBtn();
+          return;
+        }
+
+        const btn = document.getElementById('btnPlaceOrder');
+        isPlacingOrder = true;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Retrying Payment...';
+
+        try {
+          const retryRes = await LocalMartAPI.retryPayment(lastPendingOrderId);
+          if (!retryRes.success || !retryRes.data) {
+            alert(retryRes.message || 'Failed to retry payment.');
+            resetPlaceOrderBtn();
+            return;
+          }
+
+          const pData = retryRes.data;
+          const options = {
+            key: pData.key_id,
+            amount: pData.amount,
+            currency: pData.currency || 'INR',
+            name: 'Big Basket Satnali',
+            description: `Order #${pData.order_number}`,
+            image: 'assets/logo.png',
+            order_id: pData.razorpay_order_id,
+            handler: async function (response) {
+              const verifyRes = await LocalMartAPI.verifyPayment({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              });
+
+              if (verifyRes.success) {
+                window.location.href = `order-success.html?order=${encodeURIComponent(pData.order_number)}&total=${encodeURIComponent(pData.amount / 100)}&payment_id=${encodeURIComponent(response.razorpay_payment_id)}&method=Online (Razorpay)`;
+              } else {
+                showPaymentFailureModal(lastPendingOrderId, verifyRes.message || 'Signature verification failed.');
+              }
+            },
+            modal: {
+              ondismiss: function () {
+                showPaymentFailureModal(lastPendingOrderId, 'Payment window was closed.');
+              }
+            },
+            prefill: {
+              name: pData.customer_name || '',
+              email: pData.customer_email || '',
+              contact: pData.customer_phone || ''
+            },
+            theme: { color: '#d8232a' }
+          };
+
+          const rzp = new Razorpay(options);
+          rzp.open();
+        } catch (rErr) {
+          alert('Retry failed: ' + rErr.message);
+          resetPlaceOrderBtn();
+        }
+      });
+
+      document.getElementById('btnSwitchToCOD').addEventListener('click', async () => {
+        closePaymentFailureModal();
+        selectPaymentMethod('Cash on Delivery');
+        alert('Payment method switched to Cash on Delivery. Click "Place Order" to confirm.');
+      });
+
+      // Address loader
+      async function loadSavedAddresses() {
+        const grid = document.getElementById('addressGrid');
+        try {
+          const res = await LocalMartAPI.getAddresses();
+          const addresses = (res && res.success) ? res.data : [];
+
+          if (addresses.length === 0) {
+            grid.innerHTML = `
+              <div class="btn-add-address" onclick="openAddressModal()">
+                <i class="fas fa-plus-circle" style="font-size: 1.5rem;"></i>
+                <span>+ Add Delivery Address</span>
+              </div>
+            `;
+          if (addresses.length === 0) {
+            selectedAddressId = null;
+            grid.innerHTML = `
+              <div class="btn-add-address" onclick="openAddressModal()">
+                <i class="fas fa-plus-circle" style="font-size: 1.5rem;"></i>
+                <span>+ Add Delivery Address</span>
+              </div>
+            `;
+            return;
+          }
+
+          // If no address selected yet or current selection not in list, select default or first
+          if (!selectedAddressId || !addresses.some(a => a.id === selectedAddressId)) {
+            const defaultAddr = addresses.find(a => a.is_default) || addresses[0];
+            selectedAddressId = defaultAddr ? defaultAddr.id : null;
+          }
+
+          let html = '';
+          addresses.forEach((addr) => {
+            const isSel = (addr.id === selectedAddressId);
+            html += `
+              <div class="address-card ${isSel ? 'selected' : ''}" data-id="${addr.id}" onclick="selectAddressCard(${addr.id}, '${addr.pincode}')">
+                <span class="tag">${(addr.address_type || 'Home').toUpperCase()} ${addr.is_default ? '• Default' : ''}</span>
+                <div class="address-name">${addr.full_name}</div>
+                <div class="address-phone"><i class="fas fa-phone-alt"></i> ${addr.phone}</div>
+                <div class="address-text">${addr.address_line1}${addr.address_line2 ? ', ' + addr.address_line2 : ''}, ${addr.city}, ${addr.state} - <strong>${addr.pincode}</strong></div>
+              </div>
+            `;
+          });
+
+          html += `
+            <div class="btn-add-address" onclick="openAddressModal()">
+              <i class="fas fa-plus-circle" style="font-size: 1.5rem;"></i>
+              <span>+ Add Another Address</span>
+            </div>
+          `;
+
+          grid.innerHTML = html;
+        } catch (e) {
+          console.warn('Address load fallback:', e);
+        }
+      }
+
+      // Fetch authoritative checkout summary from backend
+      async function fetchAndRenderSummary() {
+        try {
+          const res = await LocalMartAPI.getCheckoutSummary({
+            address_id: selectedAddressId,
+            coupon_code: appliedCouponCode
+          });
+
+          if (res && res.success && res.data) {
+            cachedSummary = res.data;
+            renderSummary(res.data);
+          }
+        } catch (err) {
+          console.error('Summary fetch error:', err);
+        }
+      }
+
+      function renderSummary(data) {
+        const placeBtn = document.getElementById('btnPlaceOrder');
+
+        // Items count
+        document.getElementById('summaryItemsCount').textContent = `${data.items_count || 0} items`;
+
+        // Items list & Empty Cart State
+        const listEl = document.getElementById('summaryItemsList');
+        if (!data.items || data.items.length === 0) {
+          listEl.innerHTML = `
+            <div style="text-align: center; padding: 2rem 1rem; background: #fff5f5; border: 1px dashed #fca5a5; border-radius: 12px; margin: 0.5rem 0;">
+              <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🛒</div>
+              <h3 style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.3rem;">Your cart is empty.</h3>
+              <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1rem;">Looks like you haven't added any products to your cart yet.</p>
+              <a href="shop.html" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.25rem; font-weight: 700; font-size: 0.85rem; background: #d8232a; color: #fff; text-decoration: none; border-radius: 8px; box-shadow: 0 2px 6px rgba(216,35,42,0.3);">
+                <i class="fas fa-arrow-left"></i> CONTINUE SHOPPING
+              </a>
+            </div>
+          `;
+          if (placeBtn) {
+            placeBtn.disabled = true;
+            placeBtn.innerHTML = `<i class="fas fa-shopping-basket"></i> Your Cart is Empty`;
+          }
+        } else {
+          listEl.innerHTML = data.items.map(it => `
+            <div class="summary-item-row" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9;">
+              <div class="summary-item-name" style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 44px; height: 44px; border-radius: 8px; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; overflow: hidden; border: 1px solid #e2e8f0; flex-shrink: 0;">
+                  ${it.image_url ? `<img src="${it.image_url}" alt="${it.product_name}" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.onerror=null; this.parentElement.innerHTML='${it.emoji || '📦'}';">` : (it.emoji || '📦')}
+                </div>
+                <div>
+                  <div style="font-weight: 600; color: #1e293b; font-size: 0.9rem; line-height: 1.2;">${it.product_name}</div>
+                  <div style="font-size: 0.78rem; color: #64748b; margin-top: 2px;">
+                    ${it.product_brand ? `<span style="color: #d8232a; font-weight: 600;">${it.product_brand}</span> • ` : ''}
+                    ${it.product_weight ? `${it.product_weight} • ` : ''}
+                    ₹${it.unit_price} × ${it.quantity}
+                  </div>
+                  ${it.in_stock === false ? `<div style="font-size: 0.72rem; color: #dc2626; font-weight: 600;">⚠️ Out of stock</div>` : ''}
+                </div>
+              </div>
+              <div class="summary-item-price" style="font-weight: 700; color: #1e293b; font-size: 0.95rem; text-align: right;">
+                ₹${it.total_price}
+              </div>
+            </div>
+          `).join('');
+        }
+
+        // Pricing
+        document.getElementById('lblSubtotal').textContent = `₹${data.subtotal}`;
+        document.getElementById('lblDeliveryFee').textContent = data.is_free_delivery ? 'FREE' : `₹${data.delivery_fee}`;
+        document.getElementById('lblTotalAmount').textContent = `₹${data.total_amount}`;
+
+        // Discount row
+        const discRow = document.getElementById('rowDiscount');
+        if (data.discount > 0) {
+          discRow.style.display = 'flex';
+          document.getElementById('lblDiscount').textContent = `-₹${data.discount}`;
+        } else {
+          discRow.style.display = 'none';
+        }
+
+        // Free delivery alert
+        const freeAlert = document.getElementById('freeDeliveryAlert');
+        if (!data.is_free_delivery && data.amount_needed_for_free_delivery > 0 && data.items && data.items.length > 0) {
+          freeAlert.style.display = 'flex';
+          document.getElementById('freeDeliveryMsg').textContent = `Add ₹${data.amount_needed_for_free_delivery} more for FREE delivery!`;
+        } else {
+          freeAlert.style.display = 'none';
+        }
+
+        // Minimum order alert & Button availability
+        const minAlert = document.getElementById('minOrderAlert');
+        if (data.items && data.items.length > 0) {
+          if (!data.meets_minimum_order) {
+            minAlert.style.display = 'flex';
+            document.getElementById('minOrderMsg').textContent = `Add ₹${data.amount_needed_for_min_order} more to reach the ₹${data.minimum_order} minimum order.`;
+            if (placeBtn) placeBtn.disabled = true;
+          } else if (!data.delivery_available) {
+            minAlert.style.display = 'flex';
+            document.getElementById('minOrderMsg').textContent = `Delivery is currently unavailable to this address pincode.`;
+            if (placeBtn) placeBtn.disabled = true;
+          } else if (data.has_out_of_stock_items) {
+            minAlert.style.display = 'flex';
+            document.getElementById('minOrderMsg').textContent = data.stock_warning || 'Some items in your cart are out of stock. Please update quantities in cart.';
+            if (placeBtn) placeBtn.disabled = true;
+          } else {
+            minAlert.style.display = 'none';
+            if (placeBtn) placeBtn.disabled = false;
+          }
+        } else {
+          minAlert.style.display = 'none';
+        }
+
+        // Zone banner
+        const zoneBanner = document.getElementById('deliveryZoneBanner');
+        if (data.delivery_zone_name) {
+          zoneBanner.className = 'delivery-status-box';
+          zoneBanner.style.display = 'flex';
+          document.getElementById('zoneNameText').textContent = `${data.delivery_zone_name} Delivery Zone`;
+          document.getElementById('zoneEtaText').textContent = `⚡ Estimated Delivery: ${data.estimated_delivery || '15–30 minutes'}`;
+        } else if (!data.delivery_available) {
+          zoneBanner.className = 'delivery-status-box unavailable';
+          zoneBanner.style.display = 'flex';
+          document.getElementById('zoneNameText').textContent = 'Delivery Unavailable';
+          document.getElementById('zoneEtaText').textContent = 'We currently do not deliver to this pincode.';
+        } else {
+          zoneBanner.style.display = 'none';
+        }
+
+        updatePaymentMethodUI();
+      }
+
+      // Address Selection Handler
+      window.selectAddressCard = async (addrId, pincode) => {
+        selectedAddressId = addrId;
+        document.querySelectorAll('.address-card').forEach(c => {
+          c.classList.toggle('selected', c.getAttribute('data-id') == addrId);
+        });
+        await fetchAndRenderSummary();
+      };
+
+      // Modal functions
+      window.openAddressModal = () => {
+        document.getElementById('addressModal').style.display = 'flex';
+      };
+
+      window.closeAddressModal = () => {
+        document.getElementById('addressModal').style.display = 'none';
+      };
+
+      // Handle New Address Submission
+      document.getElementById('newAddressForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fullName = document.getElementById('modalFullName').value.trim();
+        const phone = document.getElementById('modalPhone').value.trim();
+        const line1 = document.getElementById('modalLine1').value.trim();
+        const city = document.getElementById('modalCity').value.trim() || 'Satnali';
+        const pincode = document.getElementById('modalPincode').value.trim() || '123024';
+
+        if (!fullName || !phone || !line1 || !pincode) {
+          alert('Please fill in all required address fields.');
+          return;
+        }
+
+        const newAddr = {
+          full_name: fullName,
+          phone: phone,
+          address_line1: line1,
+          address_line2: '',
+          city: city,
+          state: 'Haryana',
+          pincode: pincode,
+          address_type: 'home',
+          is_default: false
+        };
+
+        try {
+          const res = await LocalMartAPI.saveAddress(newAddr);
+          closeAddressModal();
+          const newId = (res && res.data && res.data.id) ? res.data.id : null;
+          if (newId) {
+            selectedAddressId = newId;
+          }
+          await loadSavedAddresses();
+          await fetchAndRenderSummary();
+          updatePaymentMethodUI();
+        } catch (err) {
+          alert('Failed to save address: ' + (err.message || 'Error occurred'));
+        }
+      });
+    });
+  </script>
+</body>
+</html>

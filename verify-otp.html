@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Verify 6-digit OTP code for your Big Basket Satnali account.">
+  <title>Verify OTP — Big Basket Satnali</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body style="background: var(--color-background-alt);">
+
+  <div class="auth-page-wrapper">
+    <div class="auth-card">
+      <a href="index.html" class="auth-brand-logo" aria-label="Big Basket Home">
+        <img src="assets/logo/logo.png" alt="Big Basket Satnali" style="height: 52px; width: auto;">
+      </a>
+
+      <h1 class="auth-card-title">Verify OTP</h1>
+      <p class="auth-card-subtitle" id="otp-subtitle">Enter the 6-digit OTP sent to your device</p>
+
+      <div style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 0.6rem 0.8rem; border-radius: var(--radius-md); font-size: 0.8rem; font-weight: 700; margin-bottom: 1.25rem;">
+        💡 Frontend Demo: Enter <strong>1 2 3 4 5 6</strong> to verify
+      </div>
+
+      <div id="otp-alert" style="display: none; padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 600; margin-bottom: 1.25rem;"></div>
+
+      <form id="otp-form">
+        <!-- 6 OTP Boxes -->
+        <div class="otp-input-group">
+          <input type="text" maxlength="1" class="otp-box" id="otp-1" autofocus inputmode="numeric" pattern="[0-9]*">
+          <input type="text" maxlength="1" class="otp-box" id="otp-2" inputmode="numeric" pattern="[0-9]*">
+          <input type="text" maxlength="1" class="otp-box" id="otp-3" inputmode="numeric" pattern="[0-9]*">
+          <input type="text" maxlength="1" class="otp-box" id="otp-4" inputmode="numeric" pattern="[0-9]*">
+          <input type="text" maxlength="1" class="otp-box" id="otp-5" inputmode="numeric" pattern="[0-9]*">
+          <input type="text" maxlength="1" class="otp-box" id="otp-6" inputmode="numeric" pattern="[0-9]*">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-verify-otp" style="font-size: 1rem; font-weight: 800;">
+          Verify OTP ➔
+        </button>
+
+        <!-- Timer & Resend -->
+        <div class="otp-resend-row">
+          Didn't receive code? 
+          <button type="button" class="btn-resend-otp" id="btn-resend" disabled>Resend OTP (<span id="resend-timer">30</span>s)</button>
+        </div>
+      </form>
+
+      <div class="auth-card-footer">
+        Entered wrong details? <a href="forgot-password.html">Try Again</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/ui.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const target = params.get('target');
+      if (target) {
+        document.getElementById('otp-subtitle').textContent = `Enter the 6-digit OTP sent to ${target}`;
+      }
+
+      // Auto-focus movement across 6 boxes
+      const boxes = document.querySelectorAll('.otp-box');
+      boxes.forEach((box, index) => {
+        box.addEventListener('input', (e) => {
+          if (box.value.length === 1 && index < boxes.length - 1) {
+            boxes[index + 1].focus();
+          }
+        });
+
+        box.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && box.value === '' && index > 0) {
+            boxes[index - 1].focus();
+          }
+        });
+      });
+
+      // 30-Second Countdown Timer
+      let countdown = 30;
+      const timerEl = document.getElementById('resend-timer');
+      const resendBtn = document.getElementById('btn-resend');
+
+      const interval = setInterval(() => {
+        countdown--;
+        if (timerEl) timerEl.textContent = countdown;
+        if (countdown <= 0) {
+          clearInterval(interval);
+          if (resendBtn) {
+            resendBtn.disabled = false;
+            resendBtn.textContent = 'Resend OTP';
+          }
+        }
+      }, 1000);
+
+      if (resendBtn) {
+        resendBtn.addEventListener('click', () => {
+          if (window.LocalMartUI) window.LocalMartUI.showToast('New OTP sent: 123456', 'info');
+          resendBtn.disabled = true;
+          countdown = 30;
+          resendBtn.innerHTML = `Resend OTP (<span id="resend-timer">30</span>s)`;
+        });
+      }
+
+      // OTP Verification
+      const form = document.getElementById('otp-form');
+      const alertBox = document.getElementById('otp-alert');
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let code = '';
+        boxes.forEach(b => code += b.value);
+
+        if (code.length < 6) {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#fef2f2';
+          alertBox.style.color = '#dc2626';
+          alertBox.style.border = '1px solid #fecaca';
+          alertBox.textContent = 'Please enter the complete 6-digit OTP.';
+          return;
+        }
+
+        if (code === '123456') {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#dcfce7';
+          alertBox.style.color = '#15803d';
+          alertBox.style.border = '1px solid #bbf7d0';
+          alertBox.textContent = 'OTP verified successfully! Redirecting...';
+
+          setTimeout(() => {
+            window.location.href = 'reset-password.html';
+          }, 800);
+        } else {
+          alertBox.style.display = 'block';
+          alertBox.style.background = '#fef2f2';
+          alertBox.style.color = '#dc2626';
+          alertBox.style.border = '1px solid #fecaca';
+          alertBox.textContent = 'Invalid OTP. For demo use 123456.';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
